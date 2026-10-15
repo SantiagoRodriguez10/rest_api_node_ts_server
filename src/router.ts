@@ -1,22 +1,55 @@
 import { Router } from "express"
-
+import { body, param } from "express-validator"
+import { createProduct, deleteProduct, getProducts, getProductsById, updateAvailabilityProduct, updateProduct } from "./handlers/product"
+import { handleInputErrors } from "./middleware"
 const router = Router()
 
 //Routing
-router.get('/', (req, res) => {
-    res.json('Desde GET')
-})
-router.post('/', (req, res) => {
-    res.json('Desde POST')
-})
-router.put('/', (req, res) => {
-    res.json('Desde PUT')
-})
-router.patch('/', (req, res) => {
-    res.json('Desde PATCH')
-})
-router.delete('/', (req, res) => {
-    res.json('Desde DELETE')
-})
+router.get('/', getProducts)
+router.get('/:id', 
+    param('id').isInt().withMessage('Id no válido'),
+    handleInputErrors,
+    getProductsById
+)
+
+
+router.post('/',
+
+    //Validación 
+    body('name')
+        .notEmpty().withMessage('El nombre de producto no puede ir vacío'),
+    body('price')
+        .isNumeric().withMessage('Valor no válido')
+        .notEmpty().withMessage('El precio de producto no puede ir vacío')
+        .custom(value => value > 0).withMessage('El precio de producto no es válido'),
+    handleInputErrors,
+    createProduct
+)
+
+
+router.put('/:id', 
+    param('id').isInt().withMessage('Id no válido'),
+    body('name')
+        .notEmpty().withMessage('El nombre de producto no puede ir vacío'),
+    body('price')
+        .isNumeric().withMessage('Valor no válido')
+        .notEmpty().withMessage('El precio de producto no puede ir vacío')
+        .custom(value => value > 0).withMessage('El precio de producto no es válido'),
+    body('availability')
+        .isBoolean().withMessage('Valor para la disponibilidad no válido'),
+    handleInputErrors,
+    updateProduct
+)
+
+router.patch('/:id', 
+    param('id').isInt().withMessage('Id no válido'),
+    handleInputErrors,
+    updateAvailabilityProduct
+)
+router.delete('/:id', 
+    param('id').isInt().withMessage('Id no válido'),
+    handleInputErrors,
+    deleteProduct
+)
 
 export default router
