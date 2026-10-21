@@ -5,11 +5,11 @@ import db from "./config/db"
 
 
 // Conectar a Base de Datos
-async function connectDB() {
+export async function connectDB() {
     try {
         await db.authenticate()
         db.sync()
-        console.log(colors.bgBlue("Conexión exitosa a la DB"));
+        /* console.log(colors.bgBlue("Conexión exitosa a la DB")); */
         
     } catch (error) {
         console.log(error);
@@ -29,5 +29,8 @@ server.use(express.json())
 
 server.use('/api/products', router)
 
+server.get('/api', (req,res) => {
+    res.json({msg:'Desde API'})
+})
 
 export default server

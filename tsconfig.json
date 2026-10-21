@@ -6,6 +6,7 @@
         "target": "ESNext",
         "moduleResolution": "nodenext",
         "module": "nodenext",
+        "types": ["node", "jest"],
         "strict": false,
         "sourceMap": true,
         "esModuleInterop": true,
